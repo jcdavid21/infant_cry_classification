@@ -114,6 +114,4 @@ Feel free to fork this project, submit pull requests, or open issues for improve
 
 ---
 
-## 📃 License
-
-MIT License – feel free to use and modify this project as needed.
+## 📃 DEVELOPED BY JUAN CARLO DAVID
