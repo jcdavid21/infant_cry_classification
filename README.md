@@ -5,6 +5,9 @@ A web application for classifying infant cries using a machine learning or deep 
 
 ---
 
+## GET THE DATA SETS HERE
+https://www.kaggle.com/datasets/warcoder/infant-cry-audio-corpus
+
 ## 📦 Requirements
 
 ### 🔧 Python Dependencies
