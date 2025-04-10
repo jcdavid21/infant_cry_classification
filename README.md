@@ -36,6 +36,12 @@ sudo apt-get install libsndfile1 ffmpeg
 brew install libsndfile ffmpeg
 ```
 
+### pip
+```bash
+pip install soundfile  # For libsndfile
+pip install ffmpeg-python  # For ffmpeg
+```
+
 #### Windows
 
 Most dependencies should work with pip, but if you run into issues, consider using Anaconda or install precompiled wheels from:  
