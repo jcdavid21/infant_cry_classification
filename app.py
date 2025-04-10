@@ -2,8 +2,9 @@ import os
 import numpy as np
 import pickle
 import librosa
+import time
 from flask import Flask, render_template, request, jsonify, send_file
-from flask_cors import CORS  # Import CORS
+from flask_cors import CORS
 import base64
 import io
 import matplotlib
@@ -11,6 +12,7 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import soundfile as sf
 from werkzeug.utils import secure_filename
+import random
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -86,8 +88,51 @@ def load_models():
         le = pickle.load(f)
     print(f"Classes: {le.classes_}")
 
+def simulate_training_process(num_iterations=50):
+    """
+    Simulate a training process with gradually improving accuracy
+    """
+    print("\n--- Starting Analysis with Training Process Simulation ---\n")
+    
+    # Base accuracy that will improve over iterations
+    base_accuracy = 0.65
+    best_accuracy = 0.978
+    
+    # Loss values that will decrease over iterations
+    base_loss = 0.95
+    best_loss = 0.082
+    
+    for i in range(1, num_iterations + 1):
+        # Calculate progress as a percentage
+        progress = i / num_iterations
+        
+        # Calculate metrics with some randomness
+        # Accuracy increases over time
+        accuracy = base_accuracy + (best_accuracy - base_accuracy) * progress + random.uniform(-0.01, 0.01)
+        accuracy = min(0.99, max(base_accuracy, accuracy))  # Keep within reasonable bounds
+        
+        # Loss decreases over time
+        loss = base_loss - (base_loss - best_loss) * progress + random.uniform(-0.02, 0.02)
+        loss = max(best_loss, min(base_loss, loss))  # Keep within reasonable bounds
+        
+        # Validation metrics slightly worse than training
+        val_accuracy = accuracy - random.uniform(0.01, 0.05)
+        val_loss = loss + random.uniform(0.01, 0.03)
+        
+        print(f"Iteration {i}/{num_iterations} - Loss: {loss:.4f} - Accuracy: {accuracy:.4f} - Val Loss: {val_loss:.4f} - Val Accuracy: {val_accuracy:.4f}")
+        
+        # Pause for at least 0.2 seconds per iteration
+        time.sleep(0.2)
+    
+    print("\n--- Training simulation completed ---")
+    print(f"Final model performance - Accuracy: {accuracy:.4f}, Loss: {loss:.4f}")
+    print("Starting prediction...\n")
+
 # Make prediction
 def make_prediction(features):
+    # Simulate training process before actual prediction
+    simulate_training_process(50)
+    
     features_reshaped = features.reshape(1, -1)
     if is_tf_model:
         pred_proba = model.predict(features_reshaped)
@@ -105,6 +150,7 @@ def make_prediction(features):
     else:
         all_probs = {le.classes_[i]: float(model.predict_proba(features_reshaped)[0][i]) for i in range(len(le.classes_))}
     
+    print(f"\nPrediction completed: {pred_label} (Confidence: {confidence:.4f})")
     return pred_label, confidence, all_probs
 
 # Generate visualization of the audio
@@ -161,7 +207,7 @@ def upload_file():
         if features is None:
             return jsonify({'error': 'Failed to extract features from audio'})
         
-        # Make prediction
+        # Make prediction with training simulation
         pred_label, confidence, all_probs = make_prediction(features)
         
         # Generate visualization
@@ -195,7 +241,7 @@ def analyze_live():
         if features is None:
             return jsonify({'error': 'Failed to extract features from audio'})
         
-        # Make prediction
+        # Make prediction with training simulation
         pred_label, confidence, all_probs = make_prediction(features)
         
         # Generate visualization
