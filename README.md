@@ -116,5 +116,3 @@ infant_cry_classification/
 Feel free to fork this project, submit pull requests, or open issues for improvements or bugs.
 
 ---
-
-## 📃 DEVELOPED BY JUAN CARLO DAVID
