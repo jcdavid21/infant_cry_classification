@@ -1,5 +1,5 @@
 // Global variables
-let trainedModel = false;
+let trainedModel = true; // Set to true by default to allow immediate analysis
 let trainingInProgress = false;
 let audioRecorder = null;
 let audioStream = null;
@@ -759,10 +759,10 @@ function delay(ms) {
 function handleAudioAnalysis(event) {
     event.preventDefault();
     
-    if (!trainedModel) {
-        alert('Please train the model with a dataset before analyzing audio.');
-        return;
-    }
+    // if (!trainedModel) {
+    //     alert('Please train the model with a dataset before analyzing audio.');
+    //     return;
+    // }
     
     const audioFile = document.getElementById('audioFile').files[0];
     if (!audioFile) {
@@ -812,10 +812,10 @@ function toggleRecording() {
     const recordButton = document.getElementById('recordButton');
     const recordingStatus = document.getElementById('recordingStatus');
     
-    if (!trainedModel) {
-        alert('Please train the model with a dataset before recording audio.');
-        return;
-    }
+    // if (!trainedModel) {
+    //     alert('Please train the model with a dataset before recording audio.');
+    //     return;
+    // }
     
     if (audioRecorder === null) {
         // Start recording
@@ -948,7 +948,7 @@ function createProbabilityChart(probabilities) {
     const ctx = document.getElementById('probabilityChart').getContext('2d');
     
     // Destroy existing chart if it exists
-    if (window.probabilityChart) {
+    if (window.probabilityChart instanceof Chart) {
         window.probabilityChart.destroy();
     }
     

@@ -460,17 +460,22 @@ def make_prediction(features):
         pred_proba = model.predict(features_reshaped)
         pred_class = np.argmax(pred_proba, axis=1)[0]
         confidence = float(pred_proba[0][pred_class])
-    else:
-        pred_class = model.predict(features_reshaped)[0]
-        confidence = float(max(model.predict_proba(features_reshaped)[0]))
-
-    pred_label = le.inverse_transform([pred_class])[0]
-    
-    # Get all class probabilities for the chart
-    if is_tf_model:
+        pred_label = le.inverse_transform([pred_class])[0]
+        # Get all class probabilities for the chart
         all_probs = {le.classes_[i]: float(pred_proba[0][i]) for i in range(len(le.classes_))}
     else:
-        all_probs = {le.classes_[i]: float(model.predict_proba(features_reshaped)[0][i]) for i in range(len(le.classes_))}
+        # For sklearn models
+        pred_proba = model.predict_proba(features_reshaped)[0]
+        pred_class = model.predict(features_reshaped)[0]
+        confidence = float(max(pred_proba))
+        pred_label = le.inverse_transform([pred_class])[0]
+        
+        # The key issue - we need to map classes to their proper indices in the model
+        # Note: model.classes_ contains the class indices in the same order as the probabilities
+        all_probs = {}
+        for i, class_index in enumerate(model.classes_):
+            class_name = le.inverse_transform([class_index])[0]
+            all_probs[class_name] = float(pred_proba[i])
     
     print(f"\nPrediction completed: {pred_label} (Confidence: {confidence:.4f})")
     return pred_label, confidence, all_probs
