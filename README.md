@@ -15,7 +15,7 @@ https://www.kaggle.com/datasets/warcoder/infant-cry-audio-corpus
 Install the required Python packages using pip:
 
 ```bash
-pip install flask flask-cors numpy librosa matplotlib soundfile scikit-learn tensorflow
+pip install numpy pandas matplotlib seaborn scikit-learn imbalanced-learn xgboost tensorflow flask flask-cors librosa soundfile
 ```
 
 > ⚠️ If you're only using a scikit-learn model (`.pkl`), you can skip installing TensorFlow.
